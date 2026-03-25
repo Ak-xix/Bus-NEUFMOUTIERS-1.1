@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Neufmoutiers Bus - Connexion</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background: linear-gradient(135deg, #1548D4 0%, #0a2d7a 100%); 
+      margin: 0; 
+      padding: 0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+    }
+    
+    /* Boîte de connexion */
+    .box { 
+      background: white; 
+      padding: 40px; 
+      border-radius: 15px; 
+      width: 400px; 
+      text-align: center; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+    }
+    
+    /* Logo et titre */
+    .logo { font-size: 50px; margin-bottom: 10px; }
+    h1 { color: #1548D4; font-size: 24px; margin: 0 0 10px 0; }
+    .sous-titre { color: #666; font-size: 14px; margin-bottom: 30px; }
+    
+    /* Formulaire */
+    input { 
+      width: 100%; 
+      padding: 12px; 
+      margin-bottom: 15px; 
+      border: 2px solid #ddd; 
+      border-radius: 8px; 
+      font-size: 14px; 
+      box-sizing: border-box; 
+    }
+    input:focus { border-color: #1548D4; outline: none; }
+    
+    /* Conteneur mot de passe avec œil */
+    .password-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .password-container input {
+      margin-bottom: 0;
+      padding-right: 45px;
+    }
+    
+    .eye-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      user-select: none;
+    }
+    
+    /* Boutons */
+    button { 
+      width: 100%; 
+      padding: 14px; 
+      margin-bottom: 10px; 
+      border: none; 
+      border-radius: 8px; 
+      font-size: 15px; 
+      font-weight: bold; 
+      cursor: pointer; 
+    }
+    
+    .btn-abonne { background: #1548D4; color: white; }
+    .btn-abonne:hover { background: #0a2d7a; }
+    
+    .btn-ticket { background: #f5f5f5; color: #333; border: 2px solid #ddd; }
+    .btn-ticket:hover { background: #e8e8e8; }
+    
+    /* Séparateur */
+    .separateur { 
+      margin: 20px 0; 
+      color: #999; 
+      font-size: 13px; 
+      position: relative; 
+    }
+    .separateur::before,
+    .separateur::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: #ddd;
+    }
+    .separateur::before { left: 0; }
+    .separateur::after { right: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    
+    <!-- Logo et titre -->
+    <div class="logo">🚌</div>
+    <h1>Neufmoutiers Bus</h1>
+    <p class="sous-titre">Connectez-vous à votre espace</p>
+
+    <!-- Formulaire abonné -->
+    <form onsubmit="seConnecter(event)">
+      <input type="email" placeholder="Adresse e-mail" required>
+      
+      <!-- Champ mot de passe avec œil -->
+      <div class="password-container">
+        <input type="password" id="motdepasse" placeholder="Mot de passe" required>
+        <span class="eye-icon" onclick="afficherMotDePasse()">👁️</span>
+      </div>
+      
+      <button type="submit" class="btn-abonne">Se connecter (Espace Abonné)</button>
+    </form>
+
+    <!-- Séparateur -->
+    <div class="separateur">OU</div>
+
+    <!-- Bouton utilisateur occasionnel -->
+    <button class="btn-ticket" onclick="allerUtilisateurOccasionnel()">
+      Utilisateur occasionnel
+    </button>
+
+    <p style="font-size: 12px; color: #999; margin-top: 20px;">
+      Pas encore d'abonnement ? <a href="Abonnements.html" style="color: #1548D4;">Souscrire à un abonnement</a>
+    </p>
+
+  </div>
+
+  <script>
+    // Liste des utilisateurs autorisés avec leur email, mot de passe et prénom
+    const utilisateurs = {
+      "shabipraba@gmail.com":             { motdepasse: "bus_9moutiers", prenom: "Shabi" },
+      "martin.ferreira2006@gmail.com":    { motdepasse: "projet2025", prenom: "Martin" },
+      "alexandrerousseau0911@gmail.com":  { motdepasse: "bus_9moutiers", prenom: "Alexandre" },
+      "aminekhorsi75@gmail.com":          { motdepasse: "Ak75019+", prenom: "Amine" }
+    };
+
+    // Fonction pour afficher/masquer le mot de passe
+    function afficherMotDePasse() {
+      var champMotDePasse = document.getElementById("motdepasse");
+      var icone = document.querySelector(".eye-icon");
+      
+      if (champMotDePasse.type === "password") {
+        champMotDePasse.type = "text";
+        icone.textContent = "🙈";
+      } else {
+        champMotDePasse.type = "password";
+        icone.textContent = "👁️";
+      }
+    }
+    
+    // Fonction de connexion abonné
+    function seConnecter(event) {
+      event.preventDefault();
+      // Récupère l'email saisi (en minuscules pour éviter les erreurs de casse)
+      var email = document.querySelector('input[type="email"]').value.trim().toLowerCase();
+      // Récupère le mot de passe saisi
+      var motdepasse = document.getElementById("motdepasse").value;
+
+      // Vérifie si l'email existe dans la liste et si le mot de passe est correct
+      if (utilisateurs[email] && utilisateurs[email].motdepasse === motdepasse) {
+        // Sauvegarde le prénom dans le sessionStorage pour l'utiliser sur la page suivante
+        sessionStorage.setItem("prenom", utilisateurs[email].prenom);
+        // Redirige vers l'espace abonne
+        window.location.href = "Espace_abonne.html";
+      } else {
+        // Affiche une erreur si email ou mot de passe incorrect
+        alert("Email ou mot de passe incorrect. Accès refusé.");
+      }
+    }
+    
+    // Fonction pour utilisateur occasionnel
+    function allerUtilisateurOccasionnel() {
+      window.location.href = "Utilisateur_occasionel.html";
+    }
+  </script> 
+
+</body>
+</html>
